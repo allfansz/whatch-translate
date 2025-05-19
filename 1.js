@@ -1,40 +1,41 @@
 (function () {
   const translations = {
     en: "Click to watch",
-    es: "Haz clic para ver",
-    fr: "Cliquez pour regarder",
-    de: "Klicken zum Ansehen",
-    it: "Clicca per guardare",
-    pt: "Clique para assistir",
-    ru: "Нажмите, чтобы посмотреть",
-    zh: "点击观看",
-    ja: "クリックして視聴",
-    ko: "시청하려면 클릭하세요",
-    ar: "انقر للمشاهدة",
-    hi: "देखने के लिए क्लिक करें",
-    id: "Klik untuk menonton",
-    ms: "Klik untuk menonton",
-    th: "คลิกเพื่อดู",
-    tr: "İzlemek için tıklayın",
-    vi: "Nhấn để xem",
-    pl: "Kliknij, aby obejrzeć",
-    uk: "Натисніть, щоб переглянути",
-    ro: "Click pentru a viziona",
+    de: "Klicken Sie zum Ansehen",
     nl: "Klik om te kijken",
+    da: "Klik for at se",
+    fi: "Klikkaa katsoaksesi",
+    fr: "Cliquez pour regarder",
+    it: "Clicca per guardare",
+    es: "Haz clic para ver",
     sv: "Klicka för att titta",
-    fi: "Klikkaa katsellaksesi",
-    cs: "Klikněte pro sledování",
-    el: "Κάντε κλικ για να παρακολουθήσετε",
-    he: "לחץ כדי לצפות"
+    ja: "クリックして見る",
+    no: "Klikk for å se",
+    pt: "Clique para assistir",
+    zh: "点击观看",
+    cs: "Klikněte pro sledování"
   };
 
-  function getLanguage() {
-    const lang = navigator.language || navigator.userLanguage;
-    const code = lang.split('-')[0];
-    return translations[code] || translations['en'];
-  }
+  const countryToLang = {
+    AU: 'en', AT: 'de', BE: 'nl', CA: 'en', DK: 'da',
+    FI: 'fi', FR: 'fr', DE: 'de', IT: 'it', NL: 'nl',
+    ES: 'es', SE: 'sv', CH: 'de', GB: 'en', US: 'en',
+    JP: 'ja', NO: 'no', PT: 'pt', NZ: 'en', TW: 'zh',
+    CZ: 'cs'
+  };
 
-  document.querySelectorAll(".watch-text").forEach(el => {
-    el.innerText = getLanguage();
-  });
+  fetch('https://get.geojs.io/v1/ip/country.json')
+    .then(res => res.json())
+    .then(data => {
+      const country = data.country;
+      const lang = countryToLang[country] || 'en';
+      const translated = translations[lang] || translations['en'];
+
+      document.querySelectorAll('a.downloadbtno').forEach(el => {
+        el.innerHTML = `<span class="loader"> &nbsp; -</span>${translated}`;
+      });
+    })
+    .catch(() => {
+      // fallback tetap pakai English
+    });
 })();
