@@ -34,11 +34,6 @@
     return translations[code] || translations['en'];
   }
 
-  window.getTranslatedWatchText = function () {
-    return getLanguage();
-  };
-
-  // Optional: auto insert into .watch-text elements
   document.querySelectorAll(".watch-text").forEach(el => {
     el.innerText = getLanguage();
   });
